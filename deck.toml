@@ -1,0 +1,17 @@
+[package]
+name = "@deckyard/onvif"
+version = "0.1.0"
+description = "IP cameras and NVRs over ONVIF: discovery, device, media streams and snapshots, PTZ, imaging and events"
+license = "LGPL-3.0-only"
+authors = ["mplx <mplx@jennifer-lang.dev>"]
+# SOAP over HTTP and WS-Discovery over UDP: it opens sockets.
+capabilities = ["net"]
+keywords = ["onvif", "camera", "nvr", "ptz", "cctv", "ws-discovery", "soap"]
+
+[package.urls]
+deck = "https://raw.githubusercontent.com/deckyard/deck-onvif/main/deck.toml"
+homepage = "https://github.com/deckyard/deck-onvif"
+manual = "https://deckyard.github.io/deck-onvif/"
+
+[engines]
+jennifer = ">=0.26.0"

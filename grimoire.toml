@@ -1,0 +1,33 @@
+# Grimoire book configuration for the @deckyard/onvif documentation.
+
+[book]
+title = "@deckyard/onvif"
+description = "IP cameras and NVRs over ONVIF: discovery, device, media streams and snapshots, PTZ, imaging and events"
+language = "en"
+src = "docs"
+
+[build]
+out = "site"
+clean = true
+jobs = 0
+
+[html]
+theme = "ember"
+mode = "auto"
+navPosition = "left"
+tocPosition = "right"
+tocDepth = 3
+sectionNumbers = true
+titleUrl = "https://deckyard.github.io/deck-onvif/"
+repoUrl = "https://github.com/deckyard/deck-onvif"
+repoLabel = "Source"
+editUrl = "https://github.com/deckyard/deck-onvif/edit/main/docs/{path}"
+
+[highlight]
+enabled = true
+
+[search]
+enabled = true
+
+[pdf]
+enabled = false
