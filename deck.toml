@@ -1,6 +1,6 @@
 [package]
 name = "@deckyard/onvif"
-version = "0.2.0"
+version = "0.3.0"
 description = "IP cameras and NVRs over ONVIF: discovery, device, media streams and snapshots, PTZ, imaging and events"
 license = "LGPL-3.0-only"
 authors = ["mplx <mplx@jennifer-lang.dev>"]
