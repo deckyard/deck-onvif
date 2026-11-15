@@ -185,14 +185,3 @@ unicast Probes work).
   errors have their own kind), with the decoder caps of M28.68 as
   `"limit"`.
 - Thrown error structs and lint's L104 for `OnvifError`.
-
-## History
-
-- 2026-11-14: first version; validated against the simulator and vendor
-  captures. Fixed then: camera text returned as data was cut at 120
-  characters and lost non-ASCII characters. Decided after it: rebasing only
-  for another host, `Stream{address, rebased}`, dropping snapshot user info,
-  generic PTZ spaces, `Device.auth` with Digest only on a Digest challenge,
-  no `mustUnderstand`.
-- 2026-11-15: a camera that cannot be reached throws the transport's
-  `net.NetError` instead of an `OnvifError` with status 0.
