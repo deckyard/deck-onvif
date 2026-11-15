@@ -98,6 +98,7 @@ def struct ClockRead {
  *   wrong user or password), an HTTP failure or a malformed reply
  * @throws {Error} kind `"limit"`, `"timeout"` or `"closed"` from the
  *   transport
+ * @throws {net.NetError} kind `"net"` when the camera cannot be reached
  */
 export func connect(dev as Device) {
     $dev = syncClock($dev);

@@ -779,6 +779,39 @@ func testGenericKindsPassOn() {
     net.close($l);
 }
 
+/**
+ * A loopback address nothing listens on.
+ *
+ * @return {string} `127.0.0.1:port` of a listener already closed
+ */
+func closedAddress() {
+    def l as net.Listener init net.listen("127.0.0.1:0");
+    def address as string init net.address($l);
+    net.close($l);
+    return $address;
+}
+
+# A camera that cannot be reached is the transport's net.NetError, passed on
+# with its fields, not an OnvifError.
+func testTransportFailuresPassOn() {
+    def d as Device init device(
+        "http://" + closedAddress() + "/onvif/device_service?key=" + PASSWORD,
+        USER,
+        PASSWORD);
+    try {
+        deviceInformation($d);
+        missed("net");
+    } catch (e) {
+        testing.assertEqual($e.kind, "net");
+        def n as net.NetError init $e;
+        testing.assertEqual($n.reason, "refused");
+        testing.assertEqual($n.op, "connect");
+        testing.assertFalse($n.sent);
+        testing.assertFalse($n.replied);
+        testing.assertFalse(strings.contains($n.message, PASSWORD));
+    }
+}
+
 func testCall() {
     def f as Fake init simFake({"/onvif/device_service GetHostname": [SIM_HOSTNAME]});
     def d as Device init connect(fakeDevice($f));

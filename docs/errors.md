@@ -29,7 +29,7 @@ Every error of kind `"onvif"` is an `onvif.OnvifError`:
 
 | Field | Holds |
 |---|---|
-| `status` | the HTTP status of the reply; 0 for a local check or a transport failure |
+| `status` | the HTTP status of the reply; 0 for a local check or a reply that could not be read |
 | `code` | the SOAP fault code without prefix: `Sender`, `Receiver`, ...; "" when there was no fault |
 | `subcode` | the first subcode: `ter:NAME` in the ONVIF error namespace, `{namespace}NAME` in another |
 | `subcodes` | every level, outermost first: `["ter:InvalidArgVal", "ter:NoProfile"]` |
@@ -58,6 +58,14 @@ func describe(e as onvif.OnvifError) {
 | `"limit"` | a reply over `maxBytes`, a snapshot over `maxMediaBytes` |
 | `"timeout"` | the camera did not answer within the idle timeout |
 | `"closed"` | the camera closed the connection mid-answer |
+| `"net"` | the camera could not be reached: a `net.NetError` |
 | `"cancelled"` | the task running the call was cancelled |
 
-Their messages start with `onvif: ` and the operation.
+The messages of `"limit"`, `"timeout"` and `"closed"` start with `onvif: `
+and the operation. A `"net"` error is the `net.NetError` `http` raised,
+passed on with its fields: `reason` (`refused`, `reset`, `unreachable`,
+`dns`, `tls`, `closed`, `other`), `op`, and `sent` / `replied`, which tell
+whether the camera may have received the request. A request that was not
+`sent` never reached the camera, so it is safe to repeat; the deck itself
+repeats nothing. Discovery passes on the `net.NetError` of a socket that
+cannot be bound or send the same way.

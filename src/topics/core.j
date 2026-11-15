@@ -793,7 +793,8 @@ def struct Posted {
 /**
  * POST a SOAP 1.2 envelope and read the reply. HTTP failures, malformed and
  * unexpected replies come back in `failed`; caps, deadlines and closed
- * connections throw their generic kinds, a cancelled task goes on as it is.
+ * connections throw their generic kinds, a transport failure
+ * (`net.NetError`) and a cancelled task go on as they are.
  *
  * @param dev {Device} the device, for its TLS and reply cap
  * @param url {string} the service URL
@@ -841,6 +842,9 @@ func post(
     } catch (e) {
         if ($e.kind == "cancelled") {
             throw $e;
+        }
+        if ($e.kind == "net") {
+            throw netPassedOn($e, $url);
         }
         # neither the query nor the user information: they may carry a key
         def why as string init "POST " + shownUrl($url) + ": " +
@@ -892,6 +896,24 @@ func post(
     } elseif (not $ok) {
         $out.failed = $statusLine + " without a fault";
     }
+    return $out;
+}
+
+/**
+ * A transport failure to pass on: the `net.NetError` as it is, its fields
+ * intact, unless its message names the URL, whose query may carry a key;
+ * then the same error with the URL shown as {@link shownUrl} shows it.
+ *
+ * @param e {net.NetError} the error, kind "net"
+ * @param url {string} the URL the request went to
+ * @return {net.NetError} the error to throw
+ */
+func netPassedOn(e as net.NetError, url as string) {
+    if (not strings.contains($e.message, $url)) {
+        return $e;
+    }
+    def out as net.NetError init $e;
+    $out.message = strings.replace($e.message, $url, shownUrl($url));
     return $out;
 }
 
@@ -1148,6 +1170,7 @@ func request(dev as Device, service as string, operation as string, body as xml.
  *   malformed reply, an unknown or missing service, or a bad action
  * @throws {Error} kind `"limit"` for a reply over the cap, `"timeout"` and
  *   `"closed"` from the transport
+ * @throws {net.NetError} kind `"net"` when the camera cannot be reached
  * @example
  *   def op as xml.Value init xml.elementNS(onvif.NS_DEVICE, "tds:GetHostname");
  *   def r as xml.Value init onvif.call($cam, "device", "GetHostname", $op);

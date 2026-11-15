@@ -147,6 +147,26 @@ func testMediaUrisAreChecked() {
     stopFake($f);
 }
 
+# A snapshot URL nothing answers on is the transport's net.NetError.
+func testSnapshotTransportFailurePassesOn() {
+    def f as Fake init simFake({
+        "/onvif/media2_service GetSnapshotUri": [
+            strings.replace(SIM_SNAPSHOT_URI2, "172.17.0.3:8080", closedAddress())
+        ]
+    });
+    def d as Device init connect(fakeDevice($f));
+    try {
+        snapshot($d, "Profile_0");
+        missed("net");
+    } catch (e) {
+        testing.assertEqual($e.kind, "net");
+        def n as net.NetError init $e;
+        testing.assertEqual($n.reason, "refused");
+        testing.assertFalse($n.sent);
+    }
+    stopFake($f);
+}
+
 func testSnapshotWithHttpDigest() {
     def f as Fake init simFake({
         "/onvif/media2_service GetSnapshotUri": [SIM_SNAPSHOT_URI2],

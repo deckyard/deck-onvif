@@ -88,8 +88,9 @@ export func discoveryOptions() {
  * @param timeoutMs {int} how long to wait for answers, 100 to 30000
  * @return {list of Discovered} the devices, in the order they answered, one
  *   per endpoint
- * @throws {OnvifError} kind `"onvif"` for a timeout out of range or a socket
- *   that cannot send
+ * @throws {OnvifError} kind `"onvif"` for a timeout out of range
+ * @throws {net.NetError} kind `"net"` for a socket that cannot be bound or
+ *   send
  */
 export func discover(timeoutMs as int) {
     def o as DiscoveryOptions init discoveryOptions();
@@ -232,8 +233,9 @@ func parseMatches(text as string, ids as list of string, from as string) {
  * @param options {DiscoveryOptions} the options, from `discoveryOptions`
  * @return {list of Discovered} the devices, at most `MAX_DEVICES`
  * @throws {OnvifError} kind `"onvif"` for a timeout out of range, an unknown
- *   type, a target that is not `host:port`, or a socket that cannot be bound
- *   or send
+ *   type or a target that is not `host:port`
+ * @throws {net.NetError} kind `"net"` for a socket that cannot be bound or
+ *   send
  */
 export func discoverWith(options as DiscoveryOptions) {
     if ($options.timeoutMs < 100 or $options.timeoutMs > 30000) {
@@ -257,6 +259,9 @@ export func discoverWith(options as DiscoveryOptions) {
     try {
         $sock = net.listenUDP(":0");
     } catch (e) {
+        if ($e.kind == "net") {
+            throw $e;
+        }
         fail("discovery: cannot open a UDP socket: " + plain($e.message));
     }
     defer net.close($sock);
@@ -274,7 +279,7 @@ export func discoverWith(options as DiscoveryOptions) {
                 convert.bytesFromString("utf-8", probeMessage($id, $t)));
         }
     } catch (e) {
-        if ($e.kind == "cancelled") {
+        if ($e.kind == "cancelled" or $e.kind == "net") {
             throw $e;
         }
         fail("discovery: cannot send to " + plain($options.target) + ": " + plain($e.message));
@@ -295,7 +300,7 @@ export func discoverWith(options as DiscoveryOptions) {
             if ($e.kind == "timeout") {
                 break;
             }
-            if ($e.kind == "cancelled") {
+            if ($e.kind == "cancelled" or $e.kind == "net") {
                 throw $e;
             }
             fail("discovery: " + plain($e.message));

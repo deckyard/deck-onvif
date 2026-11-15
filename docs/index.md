@@ -56,7 +56,9 @@ kind `"onvif"`, with the HTTP `status`, the SOAP fault `code` (`Sender`,
 (`["ter:InvalidArgVal", "ter:NoProfile"]`), and the camera's `reason`. A
 reply over the size cap is kind `"limit"`, a camera that does not answer in
 time `"timeout"`, one that closes the connection mid-answer `"closed"`; a
-cancelled task stays `"cancelled"`. Local checks (a bad URL, a token over
+camera that cannot be reached is the transport's `net.NetError` (kind
+`"net"`, with `reason`, `sent` and `replied`), and a cancelled task stays
+`"cancelled"`. Local checks (a bad URL, a token over
 64 characters, a PTZ speed outside -1 to 1) are `OnvifError` with status 0,
 thrown before anything is sent. No message carries a password or the query
 of a URL. See [Other operations and errors](errors.md).

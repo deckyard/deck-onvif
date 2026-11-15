@@ -24,7 +24,10 @@
  * `"onvif"`) with the HTTP `status` and the SOAP fault's `code` and
  * `subcode` (`ter:NotAuthorized`, `ter:InvalidArgVal`, ...). A reply over a
  * cap is kind `"limit"`, a camera that does not answer in time
- * `"timeout"`, one that closes the connection `"closed"`.
+ * `"timeout"`, one that closes the connection `"closed"`. A camera that
+ * cannot be reached (refused, reset, unreachable, no DNS answer, a failed
+ * TLS handshake, closed before any reply) throws `net.NetError` (kind
+ * `"net"`) as `http` raised it, its `reason`, `sent` and `replied` intact.
  *
  * | topic | covers |
  * | --- | --- |

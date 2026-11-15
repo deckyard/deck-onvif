@@ -248,6 +248,7 @@ export func snapshotUri(dev as Device, profile as string) {
  *   image
  * @throws {Error} kind `"limit"` for an image over `maxMediaBytes`,
  *   `"timeout"` and `"closed"` from the transport
+ * @throws {net.NetError} kind `"net"` when the camera cannot be reached
  */
 export func snapshot(dev as Device, profile as string) {
     return download($dev, snapshotUri($dev, $profile));
@@ -352,6 +353,9 @@ func fetchBytes(dev as Device, url as string, headers as map of string to string
     } catch (e) {
         if ($e.kind == "cancelled") {
             throw $e;
+        }
+        if ($e.kind == "net") {
+            throw netPassedOn($e, $url);
         }
         def why as string init plain(strings.replace($e.message, $url, shownUrl($url)));
         if ($e.kind == "limit" or $e.kind == "timeout" or $e.kind == "closed") {
