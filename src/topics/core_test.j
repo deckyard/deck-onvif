@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LGPL-3.0-only
 # SPDX-FileCopyrightText: Copyright (C) 2026 mplx <mplx@jennifer-lang.dev>
-# pragma-jennifer-version: >=0.26.0
+# pragma-jennifer-version: >=0.27.0
 
 # onvif - white-box tests for the core topic, and the fake camera the other
 # overlays use. Spliced into onvif_test.j via include.
@@ -57,8 +57,8 @@ func missed(what as string) {
  * `PATH GET` for a request without body): the first answer in the list the
  * first time, the next one the next time, the last one from then on. An
  * answer is the status, a newline, header lines `Name: value`, an empty line
- * and the body; a body `base64:...` is sent as those bytes, a status `SLEEP`
- * waits 3 s first. The hosts in RECORDED_HOSTS are replaced by the fake's
+ * and the body; a body `base64:...` is sent as those bytes, a status
+ * `SLEEP <ms>` waits that many milliseconds, then answers 200. The hosts in RECORDED_HOSTS are replaced by the fake's
  * own. A request with no answer gets 404.
  *
  * @param answers {map of string to list of string} the answers
@@ -111,7 +111,7 @@ func serveFake(srv as httpd.Server, host as string, answers as map of string to 
         } catch (e) {
             return $seen;
         }
-        def body as string init convert.stringFromBytes("utf-8", httpd.body($req));
+        def body as string init encoding.decode("utf-8", httpd.body($req));
         def target as string init httpd.path($req);
         if (httpd.rawQuery($req) != "") {
             $target = $target + "?" + httpd.rawQuery($req);
@@ -148,8 +148,8 @@ func serveFake(srv as httpd.Server, host as string, answers as map of string to 
         }
         def rest as string init $spec[$split + 2..];
         def status as string init $head[0];
-        if ($status == "SLEEP") {
-            time.sleep(time.fromMilliseconds(3000));
+        if (strings.startsWith($status, "SLEEP ")) {
+            time.sleep(time.fromMilliseconds(convert.toInt($status[len("SLEEP ")..])));
             $status = "200";
         }
         if (strings.startsWith($rest, "base64:")) {
@@ -256,14 +256,14 @@ func testPasswordDigestMatchesPublishedVectors() {
     # computed with Python's hashlib, independently of this deck
     testing.assertEqual(
         passwordDigest(
-            convert.bytesFromString("utf-8", "0123456789abcdef"),
+            encoding.encode("utf-8", "0123456789abcdef"),
             "2026-11-14T19:32:05Z",
             PASSWORD),
         "Auwox7Q9uQMEeyNqjM8gI6zJElE=");
 }
 
 func testSecurityHeaderShape() {
-    def nonce as bytes init convert.bytesFromString("utf-8", "0123456789abcdef");
+    def nonce as bytes init encoding.encode("utf-8", "0123456789abcdef");
     def h as xml.Value init securityHeader("ad<min", PASSWORD, $nonce, "2026-11-14T19:32:05Z");
     def text as string init xml.encode($h);
     testing.assertEqual(xml.namespace($h), WSSE_NS);
@@ -342,7 +342,7 @@ func testSettings() {
     testing.assertEqual(withAuth($d, "digest").auth, "digest");
     testing.assertEqual(withAuth(withAuth($d, "wsse"), "").auth, "");
     testing.assertTrue(withInsecure($d).tls.skipVerify);
-    def pem as bytes init convert.bytesFromString("utf-8", "-----BEGIN CERTIFICATE-----");
+    def pem as bytes init encoding.encode("utf-8", "-----BEGIN CERTIFICATE-----");
     def withCa as Device init withCaCert(withInsecure($d), $pem);
     testing.assertEqual($withCa.tls.caCert, $pem);
     testing.assertFalse($withCa.tls.skipVerify);
@@ -555,13 +555,13 @@ func testMessagesShowNoCredentials() {
         shownUrl("http://admin:pw@10.0.0.1:81/snap.jpg?user=admin&pwd=pw"),
         "http://10.0.0.1:81/snap.jpg");
     testing.assertEqual(plain("a\u001b[31mb"), "a?[31mb");
-    testing.assertEqual(len(plain(strings.repeat("x", 500))), SHOWN + 3);
+    testing.assertEqual(len(plain(strings.replicate("x", 500))), SHOWN + 3);
 }
 
 func testCheckToken() {
     checkToken("Profile_0", "profile token");
-    checkToken(strings.repeat("t", 64), "profile token");
-    for (def bad in ["", strings.repeat("t", 65), "a\tb"]) {
+    checkToken(strings.replicate("t", 64), "profile token");
+    for (def bad in ["", strings.replicate("t", 65), "a\tb"]) {
         try {
             checkToken($bad, "profile token");
             missed($bad);
@@ -597,7 +597,7 @@ func testEveryRequestIsSigned() {
             "sha1",
             binary.concat(
                 encoding.fromText("base64", $nonce),
-                convert.bytesFromString("utf-8", $created + PASSWORD)));
+                encoding.encode("utf-8", $created + PASSWORD)));
         testing.assertEqual(field($s.body, "Password"), encoding.toText("base64", $digest));
         testing.assertFalse(lists.contains($nonces, $nonce));
         $nonces[] = $nonce;
@@ -734,10 +734,10 @@ func testHttpDigestWhenTheCameraAsks() {
 func testGenericKindsPassOn() {
     def f as Fake init simFake({
         "/onvif/media2_service GetProfiles": [
-            ok(strings.repeat(" ", 5000) + bodyOf(SIM_PROFILES2))
+            ok(strings.replicate(" ", 5000) + bodyOf(SIM_PROFILES2))
         ],
         "/onvif/device_service GetDeviceInformation": [
-            "SLEEP\nContent-Type: application/soap+xml\n\n" + bodyOf(SIM_INFO)
+            "SLEEP 350\nContent-Type: application/soap+xml\n\n" + bodyOf(SIM_INFO)
         ]
     });
     def d as Device init withMaxBytes(connect(fakeDevice($f)), 4096);
@@ -749,7 +749,7 @@ func testGenericKindsPassOn() {
         testing.assertContains($e.message, "onvif: GetProfiles: POST ");
     }
     try {
-        deviceInformation(withTimeout($d, 500));
+        deviceInformation(withTimeout($d, 100));
         missed("timeout");
     } catch (e) {
         testing.assertEqual($e.kind, "timeout");
@@ -762,7 +762,7 @@ func testGenericKindsPassOn() {
         net.readBytes($conn, 65536);
         net.writeBytes(
             $conn,
-            convert.bytesFromString("utf-8", "HTTP/1.1 200 OK\r\nContent-Length: 500\r\n\r\n<x"));
+            encoding.encode("utf-8", "HTTP/1.1 200 OK\r\nContent-Length: 500\r\n\r\n<x"));
         net.close($conn);
         return 0;
     };

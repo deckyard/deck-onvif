@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LGPL-3.0-only
 # SPDX-FileCopyrightText: Copyright (C) 2026 mplx <mplx@jennifer-lang.dev>
-# pragma-jennifer-version: >=0.26.0
+# pragma-jennifer-version: >=0.27.0
 
 # onvif - white-box tests for the media topic. Spliced into onvif_test.j via
 # include.
@@ -200,7 +200,7 @@ func testSnapshotFailures() {
             "404\nContent-Type: text/html\n\nnone",
             "401\nWWW-Authenticate: Bearer\nContent-Type: text/html\n\n401",
             "200\nContent-Type: application/octet-stream\n\nbase64:" + SIM_JPEG,
-            "200\nContent-Type: image/jpeg\n\n" + strings.repeat("x", 5000)
+            "200\nContent-Type: image/jpeg\n\n" + strings.replicate("x", 5000)
         ]
     });
     def d as Device init connect(fakeDevice($f));
@@ -273,7 +273,7 @@ func testSnapshotFollowsTheServiceRule() {
         "http://10.0.0.5:8080/snap.jpg");
     testing.assertTrue(isImage(encoding.fromText("base64", SIM_JPEG)));
     testing.assertTrue(isImage(encoding.fromText("hex", "89504e470d0a1a0a")));
-    testing.assertFalse(isImage(convert.bytesFromString("utf-8", "<html>")));
+    testing.assertFalse(isImage(encoding.encode("utf-8", "<html>")));
 }
 
 # User information in a snapshot URI is dropped: never sent, never shown;

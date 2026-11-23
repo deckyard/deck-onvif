@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LGPL-3.0-only
 # SPDX-FileCopyrightText: Copyright (C) 2026 mplx <mplx@jennifer-lang.dev>
-# pragma-jennifer-version: >=0.26.0
+# pragma-jennifer-version: >=0.27.0
 
 # onvif - white-box tests for the discovery topic. Spliced into onvif_test.j via
 # include.
@@ -17,15 +17,15 @@ func serveProbes(sock as net.UDPSocket) {
     def got as list of string init [];
     for (def i in 0..2) {
         def dg as net.Datagram init net.recvFrom($sock, 65535);
-        def text as string init convert.stringFromBytes("utf-8", $dg.data);
+        def text as string init encoding.decode("utf-8", $dg.data);
         $got[] = $text;
         def id as string init field($text, "MessageID");
-        net.sendTo($sock, $dg.peer, convert.bytesFromString("utf-8", "not xml"));
-        net.sendTo($sock, $dg.peer, convert.bytesFromString("utf-8", SIM_PROBE_MATCHES));
+        net.sendTo($sock, $dg.peer, encoding.encode("utf-8", "not xml"));
+        net.sendTo($sock, $dg.peer, encoding.encode("utf-8", SIM_PROBE_MATCHES));
         net.sendTo(
             $sock,
             $dg.peer,
-            convert.bytesFromString("utf-8", strings.replace(SIM_PROBE_MATCHES, SIM_PROBE_ID, $id)));
+            encoding.encode("utf-8", strings.replace(SIM_PROBE_MATCHES, SIM_PROBE_ID, $id)));
     }
     return $got;
 }
@@ -115,7 +115,7 @@ func testScopesAreKeptWhole() {
     testing.assertEqual(
         scopeValue(["onvif://www.onvif.org/name/a%1Bb%C2%9Bc"], "onvif://www.onvif.org/name/"),
         "a?b?c");
-    def long as string init "onvif://www.onvif.org/location/" + strings.repeat("x", 150);
+    def long as string init "onvif://www.onvif.org/location/" + strings.replicate("x", 150);
     def found as list of Discovered init parseMatches(
         strings.replace(SIM_PROBE_MATCHES, "onvif://www.onvif.org/Profile/T", $long),
         [SIM_PROBE_ID],

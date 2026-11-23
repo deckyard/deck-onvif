@@ -46,7 +46,7 @@ and loopback addresses; anything else needs `withPlainHttp`.
 
 ## Requirements
 
-Jennifer 0.26.0 or newer and the capability `net` (SOAP over HTTP, WS-Discovery
+Jennifer 0.27.0 or newer and the capability `net` (SOAP over HTTP, WS-Discovery
 over UDP), so not `jennifer-tiny`. No other deck. RTSP and video decoding are
 out of scope: the deck returns the stream URLs.
 

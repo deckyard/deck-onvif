@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LGPL-3.0-only
 # SPDX-FileCopyrightText: Copyright (C) 2026 mplx <mplx@jennifer-lang.dev>
-# pragma-jennifer-version: >=0.26.0
+# pragma-jennifer-version: >=0.27.0
 
 # onvif - core: the Device handle and its settings, URL policy, WS-Security,
 # the clock offset, the SOAP exchange, errors and `call`. Spliced into
@@ -210,7 +210,7 @@ func failStatus(message as string, status as int) {
 func plain(text as string) {
     def cut as string init $text;
     if (len($cut) > SHOWN) {
-        $cut = strings.substring($cut, 0, SHOWN) + "...";
+        $cut = $cut[..SHOWN] + "...";
     }
     return regex.replace("[^ -~]", $cut, "?");
 }
@@ -295,7 +295,7 @@ export func device(address as string, user as string, password as string) {
         media: "",
         auth: "",
         plainHttp: false,
-        tls: http.TlsOptions{skipVerify: false, caCert: convert.bytesFromString("utf-8", "")},
+        tls: http.TlsOptions{skipVerify: false, caCert: encoding.encode("utf-8", "")},
         timeoutMs: DEFAULT_TIMEOUT_MS,
         maxBytes: DEFAULT_MAX_BYTES,
         maxMediaBytes: DEFAULT_MAX_MEDIA_BYTES,
@@ -710,9 +710,7 @@ func onDeviceHost(dev as Device, url as string, what as string) {
  *       "2010-09-16T07:50:45Z", "userpassword");   # "tuOSpGlFlIXsozq4HFNeeGeFLEI="
  */
 export func passwordDigest(nonce as bytes, created as string, password as string) {
-    def data as bytes init binary.concat(
-        $nonce,
-        convert.bytesFromString("utf-8", $created + $password));
+    def data as bytes init binary.concat($nonce, encoding.encode("utf-8", $created + $password));
     return encoding.toText("base64", hash.compute("sha1", $data));
 }
 

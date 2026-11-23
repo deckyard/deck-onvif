@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LGPL-3.0-only
 # SPDX-FileCopyrightText: Copyright (C) 2026 mplx <mplx@jennifer-lang.dev>
-# pragma-jennifer-version: >=0.26.0
+# pragma-jennifer-version: >=0.27.0
 
 # onvif - white-box tests for the ptz topic. Spliced into onvif_test.j via
 # include.
@@ -78,7 +78,7 @@ func testMovesCheckTheirInput() {
     } catch (e) {
         testing.assertEqual($e.message, "onvif: a zoom position is 0.0 to 1.0, got -0.5");
     }
-    for (def token in ["", strings.repeat("p", 65)]) {
+    for (def token in ["", strings.replicate("p", 65)]) {
         try {
             stopMove($d, $token);
             missed("token");
@@ -146,7 +146,7 @@ func testPresets() {
         testing.assertEqual($e.reason, "the parameter value is illegal");
     }
     removePreset($d, "Profile_0", "PresetToken_1");
-    testing.assertThrowsWith("removePreset", [$d, "Profile_0", ""], ERROR_KIND);
+    testing.assertThrowsArgs("removePreset", [$d, "Profile_0", ""], ERROR_KIND);
     def seen as list of Seen init stopFake($f);
     testing.assertEqual(field($seen[2].body, "PresetName"), "Door");
     testing.assertEqual(field($seen[5].body, "PresetToken"), "PresetToken_1");

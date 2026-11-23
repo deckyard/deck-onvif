@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LGPL-3.0-only
 # SPDX-FileCopyrightText: Copyright (C) 2026 mplx <mplx@jennifer-lang.dev>
-# pragma-jennifer-version: >=0.26.0
+# pragma-jennifer-version: >=0.27.0
 
 # onvif - white-box tests for the events topic. Spliced into onvif_test.j via
 # include.
@@ -195,7 +195,7 @@ func testTopics() {
 # characters replaced (they were cut at 120 characters and non-ASCII
 # turned into ?).
 func testEventTextIsKeptWhole() {
-    def long as string init strings.repeat("0123456789", 20);
+    def long as string init strings.replicate("0123456789", 20);
     def pulled as string init strings.replace(
         SIM_PULL_MOTION,
         'Name="State" Value="true"',

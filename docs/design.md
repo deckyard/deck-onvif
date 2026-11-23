@@ -179,7 +179,9 @@ unicast Probes work).
 
 ## Dependencies on the interpreter
 
-- The bundled `soap` module and HTTP Digest in `http` (0.26.0, the floor).
+- Floor `>=0.27.0`: the UTF-8 codecs of `encoding.encode` / `decode`,
+  `strings.replicate` and `testing.assertThrowsArgs` arrived in 0.27.0.
+- The bundled `soap` module and HTTP Digest in `http` (0.26.0).
 - The bundled modules passing `"limit"`, `"timeout"` and `"closed"` on.
 - `net.NetError` and the `"net"` kind (`jennifer`'s M28.65, transport
   errors have their own kind), with the decoder caps of M28.68 as

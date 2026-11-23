@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LGPL-3.0-only
 # SPDX-FileCopyrightText: Copyright (C) 2026 mplx <mplx@jennifer-lang.dev>
-# pragma-jennifer-version: >=0.26.0
+# pragma-jennifer-version: >=0.27.0
 
 # onvif - WS-Discovery: a Probe to the multicast group, ProbeMatches back by
 # unicast. Spliced into onvif.j via include.
@@ -273,10 +273,7 @@ export func discoverWith(options as DiscoveryOptions) {
         for (def t in $options.types) {
             def id as string init "urn:uuid:" + uuid.v4();
             $ids[] = $id;
-            net.sendTo(
-                $sock,
-                $options.target,
-                convert.bytesFromString("utf-8", probeMessage($id, $t)));
+            net.sendTo($sock, $options.target, encoding.encode("utf-8", probeMessage($id, $t)));
         }
     } catch (e) {
         if ($e.kind == "cancelled" or $e.kind == "net") {
@@ -310,7 +307,7 @@ export func discoverWith(options as DiscoveryOptions) {
         }
         def text as string init "";
         try {
-            $text = convert.stringFromBytes("utf-8", $dg.data);
+            $text = encoding.decode("utf-8", $dg.data);
         } catch (e) {
             continue;
         }
