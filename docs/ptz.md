@@ -20,7 +20,7 @@ io.printf("at %f %f, zoom %f, moving %t\n", $s.pan, $s.tilt, $s.zoom, $s.panTilt
 | `onvif.absoluteMove(dev, profile, pan, tilt, zoom)` | generic position | pan, tilt -1.0 to 1.0; zoom 0.0 to 1.0 |
 | `onvif.relativeMove(dev, profile, pan, tilt, zoom)` | generic translation | each -1.0 to 1.0 |
 
-The ranges are ONVIF's normalized generic spaces and are checked before
+The ranges are ONVIF™'s normalized generic spaces and are checked before
 anything is sent. Every request names its space (`space` on `PanTilt` and
 `Zoom`: `PANTILT_SPACES` / `ZOOM_SPACES` followed by
 `VelocityGenericSpace`, `PositionGenericSpace` or `TranslationGenericSpace`),
@@ -30,7 +30,7 @@ relative moves: the head uses its default speed. Positive pan turns right, posit
 in. A zoom of 0.0 in a continuous or relative move is left out of the
 request, for heads without zoom. A head that does not support a space
 answers with a fault, an `OnvifError` with `subcode` `ter:InvalidArgVal`
-and `ter:SpaceNotSupported` in `subcodes` (seen on Hikvision for absolute
+and `ter:SpaceNotSupported` in `subcodes` (seen on Hikvision™ for absolute
 and relative moves), or `ter:InvalidPosition` (onvif_simple_server, which
 reads its generic space in degrees, 0 to 360, whatever the request names).
 

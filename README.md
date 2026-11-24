@@ -4,7 +4,7 @@
 [![Documentation](https://img.shields.io/badge/docs-github%20pages-blue)](https://deckyard.github.io/deck-onvif/)
 [![release](https://img.shields.io/github/v/release/deckyard/deck-onvif)](https://github.com/deckyard/deck-onvif/releases/latest)
 
-IP cameras and NVRs over ONVIF for [Jennifer](https://jennifer-lang.dev/)
+IP cameras and NVRs over ONVIF™ for [Jennifer](https://jennifer-lang.dev/)
 programs: WS-Discovery on the LAN, device information and clock, media
 profiles with RTSP and snapshot URLs, snapshots, PTZ moves and presets,
 brightness and focus, and events from a pull-point subscription. One client
@@ -62,3 +62,13 @@ tools/pack.sh dist                   # build the release archive
 ## Licence
 
 LGPL-3.0-only, see [LICENSE](LICENSE). Copyright (C) 2026 mplx &lt;mplx@jennifer-lang.dev&gt;.
+
+## Trademarks
+
+ONVIF™ is a trademark of ONVIF, Inc. Hikvision™ is a trademark of Hangzhou
+Hikvision Digital Technology Co., Ltd. EZVIZ™ is a trademark of Hangzhou
+EZVIZ Network Co., Ltd. Dahua™ is a trademark of Zhejiang Dahua Technology
+Co., Ltd. Axis™ is a trademark of Axis AB. Other product and company names
+may be trademarks of their respective owners. They are used only to identify
+the products this deck works with. This deck is an independent project, not
+affiliated with, sponsored or endorsed by ONVIF, Inc. or any camera vendor.

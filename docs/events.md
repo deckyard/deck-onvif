@@ -37,12 +37,12 @@ while (true) {
 
 ## Events
 
-An `Event` has the `topic` with the ONVIF topic namespace written `tns1:`
+An `Event` has the `topic` with the ONVIF™ topic namespace written `tns1:`
 whatever prefix the camera used (`tns1:RuleEngine/CellMotionDetector/Motion`,
 `tns1:VideoSource/MotionAlarm`), the `utcTime` and `operation`, and the
 `source`, `key` and `data` simple items as maps. Topics differ by vendor:
-cell motion on Dahua is `IsMotion` under `tns1:RuleEngine/CellMotionDetector/Motion`,
-Hikvision and onvif_simple_server send `State` under
+cell motion on Dahua™ is `IsMotion` under `tns1:RuleEngine/CellMotionDetector/Motion`,
+Hikvision™ and onvif_simple_server send `State` under
 `tns1:VideoSource/MotionAlarm`.
 
 ## Addressing
@@ -52,7 +52,7 @@ addresses (on the device's origin when the camera names another host), with
 WS-Addressing `Action`, `To` and `MessageID` header blocks. `To` is
 `reference`, the address exactly as the camera gave it, which is what a
 camera behind NAT expects to see. A camera that names the subscription by
-reference parameters (Axis: `SubscriptionId`) gets them back as header
+reference parameters (Axis™: `SubscriptionId`) gets them back as header
 blocks marked `IsReferenceParameter`. The address keeps its path and query
 as given, even a Hikvision one with a raw `%` in it, on the device's scheme,
 host and port.

@@ -37,7 +37,7 @@ Every request carries a `UsernameToken` header block:
 ```
 
 The digest is `base64(sha1(nonce + created + password))` (the values above
-are the example of the ONVIF Application Programmer's Guide;
+are the example of the ONVIF™ Application Programmer's Guide;
 `onvif.passwordDigest` computes it). The nonce is 16 random bytes, new for
 every request, so a recorded request cannot be replayed once the camera has
 seen it, and `Created` is new too: the header is built per request.
@@ -59,7 +59,7 @@ or password, or clocks too far apart.
 
 ## HTTP Digest and the auth method
 
-Some cameras (newer Hikvision firmware, NVRs) also guard the SOAP endpoint
+Some cameras (newer Hikvision™ firmware, NVRs) also guard the SOAP endpoint
 with HTTP Digest. `Device.auth` says how signed calls sign in:
 
 | `auth` | Signed calls | A `401` |

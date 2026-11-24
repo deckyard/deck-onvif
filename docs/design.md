@@ -6,7 +6,7 @@
 ## Scope
 
 The deck is one client for IP cameras and NVRs of every vendor that
-implements the ONVIF profiles (S streaming, T advanced streaming, G
+implements the ONVIF™ profiles (S streaming, T advanced streaming, G
 recording), over SOAP 1.2 web services:
 
 - WS-Discovery: find devices on the local network;
@@ -99,7 +99,7 @@ Out of scope:
   endpoint, capped at `MAX_DEVICES`, and junk is skipped, since any host
   can send to the socket.
 - **Events.** Requests carry WS-Addressing `Action`, `To` and `MessageID`;
-  reference parameters (such as Axis's subscription id) are sent back as
+  reference parameters (such as Axis™'s subscription id) are sent back as
   given. `pull` returns `Pulled{events, subscription}` with the updated
   termination time.
 
@@ -152,12 +152,12 @@ The deck repeats no request after a transport failure.
   overlays run from a bare copy of `src/`.
 - Replies were recorded on 2026-11-14 from onvif_simple_server (a C ONVIF
   server used in camera firmware, run in a container, which checks the
-  PasswordDigest), and taken from published captures of EZVIZ (Hikvision
-  firmware), Dahua and gSOAP cameras and the ONVIF Application Programmer's
+  PasswordDigest), and taken from published captures of EZVIZ™ (Hikvision™
+  firmware), Dahua™ and gSOAP cameras and the ONVIF Application Programmer's
   Guide (Axis). The PasswordDigest matches the Guide's vector.
 - Validated on 2026-11-14 against the simulator: every export and the
   examples, including a port-mapped setup that showed the rebase rules
-  working. Raw captures from Axis, Bosch and Reolink cameras parse without
+  working. Raw captures from Axis, Bosch™ and Reolink™ cameras parse without
   error.
 - Transport failures are tested against a closed loopback port.
 - The examples need a camera and are only parse-checked in the gate. There

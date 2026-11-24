@@ -13,7 +13,7 @@ io.printf("brightness %f, focus %s\n", $s.values["Brightness"], $s.focusMode);
 
 `values` holds the numbers the device reports among `Brightness`,
 `ColorSaturation`, `Contrast` and `Sharpness`, on the device's own scale
-(0 to 100 on Hikvision, 0 to 1 elsewhere); read it with `maps.has` first.
+(0 to 100 on Hikvision™, 0 to 1 elsewhere); read it with `maps.has` first.
 
 ## Brightness
 

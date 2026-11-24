@@ -3,7 +3,7 @@
 
 # @deckyard/onvif
 
-IP cameras and NVRs over ONVIF, the SOAP web services every vendor that
+IP cameras and NVRs over ONVIF™, the SOAP web services every vendor that
 implements the ONVIF profiles (S streaming, T advanced streaming, G
 recording) speaks. One client for all of them: find devices on the LAN, read
 their identity and clock, list the media profiles with their RTSP and
@@ -78,8 +78,18 @@ try {
 ## Out of scope
 
 - RTSP and video: the deck returns stream URLs; `ffmpeg`, a player, or
-  Frigate (`@deckyard/frigate`) consume them.
+  Frigate™ (`@deckyard/frigate`) consume them.
 - Push notifications (`Subscribe` with a consumer address): they need an
   HTTP endpoint the camera can reach. Pull-point subscriptions cover events.
 - Profile M analytics, recording search and replay, device configuration
   (users, network, OSD): reachable through `onvif.call`, without helpers.
+
+## Trademarks
+
+ONVIF™ is a trademark of ONVIF, Inc. Hikvision™ is a trademark of Hangzhou
+Hikvision Digital Technology Co., Ltd. EZVIZ™ is a trademark of Hangzhou
+EZVIZ Network Co., Ltd. Dahua™ is a trademark of Zhejiang Dahua Technology
+Co., Ltd. Axis™ is a trademark of Axis AB. Other product and company names
+may be trademarks of their respective owners. They are used only to identify
+the products this deck works with. This deck is an independent project, not
+affiliated with, sponsored or endorsed by ONVIF, Inc. or any camera vendor.

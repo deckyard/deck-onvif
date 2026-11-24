@@ -16,7 +16,7 @@ sending socket, so no multicast group is joined and no privilege is needed.
 UDP may drop a datagram: a device missing from one run may answer the next.
 
 Two Probes go out, one per type: `dn:NetworkVideoTransmitter` (cameras) and
-`tds:Device` (any ONVIF device, NVRs included). A device that matches both
+`tds:Device` (any ONVIF™ device, NVRs included). A device that matches both
 is listed once, by its endpoint reference.
 
 Each `Discovered` has the device's `endpoint` (a stable `urn:uuid:`), the

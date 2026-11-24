@@ -31,7 +31,7 @@ Every error of kind `"onvif"` is an `onvif.OnvifError`:
 |---|---|
 | `status` | the HTTP status of the reply; 0 for a local check or a reply that could not be read |
 | `code` | the SOAP fault code without prefix: `Sender`, `Receiver`, ...; "" when there was no fault |
-| `subcode` | the first subcode: `ter:NAME` in the ONVIF error namespace, `{namespace}NAME` in another |
+| `subcode` | the first subcode: `ter:NAME` in the ONVIF™ error namespace, `{namespace}NAME` in another |
 | `subcodes` | every level, outermost first: `["ter:InvalidArgVal", "ter:NoProfile"]` |
 | `reason` | the camera's reason text, printable ASCII, cut to 120 characters |
 
@@ -40,7 +40,7 @@ Common subcodes: `ter:NotAuthorized` (wrong credentials or clocks apart; HTTP
 second level (`ter:NoProfile`, `ter:NoToken`, `ter:NoSource`,
 `ter:InvalidStreamSetup`, `ter:InvalidPosition`), `ter:ActionNotSupported`.
 Vendors differ: gSOAP firmware answers a 401 with a `Sender` fault without
-subcode, Hikvision with an HTML page (`code` ""), Dahua sends some faults
+subcode, Hikvision™ with an HTML page (`code` ""), Dahua™ sends some faults
 with HTTP 200. Compare `subcode` / `subcodes`, never the message.
 
 A helper that receives a caught error takes `onvif.OnvifError`, not `Error`:
