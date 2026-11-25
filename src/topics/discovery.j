@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LGPL-3.0-only
 # SPDX-FileCopyrightText: Copyright (C) 2026 mplx <mplx@jennifer-lang.dev>
-# pragma-jennifer-version: >=0.27.0
+# pragma-jennifer-version: >=0.28.0
 
 # onvif - WS-Discovery: a Probe to the multicast group, ProbeMatches back by
 # unicast. Spliced into onvif.j via include.
@@ -283,9 +283,9 @@ export func discoverWith(options as DiscoveryOptions) {
     }
     def found as list of Discovered init [];
     def seen as list of string init [];
-    def deadline as int init time.unixMillis(time.now()) + $options.timeoutMs;
+    def deadline as int init time.unixMilliseconds(time.now()) + $options.timeoutMs;
     while (len($found) < MAX_DEVICES) {
-        def left as int init $deadline - time.unixMillis(time.now());
+        def left as int init $deadline - time.unixMilliseconds(time.now());
         if ($left <= 0) {
             break;
         }

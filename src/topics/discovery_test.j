@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LGPL-3.0-only
 # SPDX-FileCopyrightText: Copyright (C) 2026 mplx <mplx@jennifer-lang.dev>
-# pragma-jennifer-version: >=0.27.0
+# pragma-jennifer-version: >=0.28.0
 
 # onvif - white-box tests for the discovery topic. Spliced into onvif_test.j via
 # include.
@@ -132,9 +132,9 @@ func testDiscoverOverLoopback() {
     testing.assertEqual($o.target, DISCOVERY_ADDRESS);
     $o.target = net.address($sock);
     $o.timeoutMs = 800;
-    def started as int init time.unixMillis(time.now());
+    def started as int init time.unixMilliseconds(time.now());
     def found as list of Discovered init discoverWith($o);
-    def took as int init time.unixMillis(time.now()) - $started;
+    def took as int init time.unixMilliseconds(time.now()) - $started;
     def probes as list of string init task.wait($t);
     net.close($sock);
     testing.assertEqual(len($found), 1);

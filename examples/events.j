@@ -1,7 +1,7 @@
 #!/usr/bin/env -S jennifer run
 # SPDX-License-Identifier: LGPL-3.0-only
 # SPDX-FileCopyrightText: Copyright (C) 2026 mplx <mplx@jennifer-lang.dev>
-# pragma-jennifer-version: >=0.27.0
+# pragma-jennifer-version: >=0.28.0
 
 /**
  * Print a camera's events for a minute, through a pull-point subscription:
@@ -22,8 +22,8 @@ if (len(os.ARGS) < 2) {
 def cam as onvif.Device init onvif.connect(
     onvif.device(os.ARGS[1], os.getEnv("ONVIF_USER"), os.getEnv("ONVIF_PASSWORD")));
 def sub as onvif.Subscription init onvif.subscribe($cam, 120);
-def stopAt as int init time.unixMillis(time.now()) + 60000;
-while (time.unixMillis(time.now()) < $stopAt) {
+def stopAt as int init time.unixMilliseconds(time.now()) + 60000;
+while (time.unixMilliseconds(time.now()) < $stopAt) {
     def got as onvif.Pulled init onvif.pull($cam, $sub, 10, 100);
     $sub = $got.subscription;
     for (def e in $got.events) {

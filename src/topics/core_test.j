@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LGPL-3.0-only
 # SPDX-FileCopyrightText: Copyright (C) 2026 mplx <mplx@jennifer-lang.dev>
-# pragma-jennifer-version: >=0.27.0
+# pragma-jennifer-version: >=0.28.0
 
 # onvif - white-box tests for the core topic, and the fake camera the other
 # overlays use. Spliced into onvif_test.j via include.
@@ -288,7 +288,8 @@ func testCreatedFollowsTheOffset() {
     testing.assertTrue(regex.matches(
         '^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}Z$',
         $created));
-    def gap as int init time.unixMillis(time.now()) - time.unixMillis(time.fromIso($created));
+    def gap as int init time.unixMilliseconds(time.now()) -
+        time.unixMilliseconds(time.fromIso($created));
     testing.assertTrue($gap > 86398000 and $gap < 86402000);
 }
 
@@ -588,7 +589,7 @@ func testEveryRequestIsSigned() {
         "application/soap+xml; charset=utf-8; action=\"http://www.onvif.org/ver10/device/wsdl/GetSystemDateAndTime\"");
     def nonces as list of string init [];
     # the simulator's clock in SIM_TIME
-    def camera as int init time.unixMillis(time.fromIso("2026-11-14T19:32:03Z"));
+    def camera as int init time.unixMilliseconds(time.fromIso("2026-11-14T19:32:03Z"));
     for (def s in $seen[1..]) {
         testing.assertEqual(field($s.body, "Username"), USER);
         def nonce as string init field($s.body, "Nonce");
@@ -601,7 +602,7 @@ func testEveryRequestIsSigned() {
         testing.assertEqual(field($s.body, "Password"), encoding.toText("base64", $digest));
         testing.assertFalse(lists.contains($nonces, $nonce));
         $nonces[] = $nonce;
-        def gap as int init time.unixMillis(time.fromIso($created)) - $camera;
+        def gap as int init time.unixMilliseconds(time.fromIso($created)) - $camera;
         testing.assertTrue($gap >= -1000 and $gap < 10000);
         testing.assertFalse(strings.contains($s.body, PASSWORD));
         testing.assertEqual($s.authorization, "");

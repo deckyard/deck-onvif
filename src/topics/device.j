@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LGPL-3.0-only
 # SPDX-FileCopyrightText: Copyright (C) 2026 mplx <mplx@jennifer-lang.dev>
-# pragma-jennifer-version: >=0.27.0
+# pragma-jennifer-version: >=0.28.0
 
 # onvif - the Device service: connect, the clock, identity, services,
 # scopes, reboot. Spliced into onvif.j via include.
@@ -157,7 +157,7 @@ func readClock(dev as Device) {
     def op as xml.Value init xml.elementNS(NS_DEVICE, "tds:GetSystemDateAndTime");
     def action as string init NS_DEVICE + "/GetSystemDateAndTime";
     def url as string init serviceAddress($dev, "device");
-    def before as int init time.unixMillis(time.now());
+    def before as int init time.unixMilliseconds(time.now());
     def a as Answer;
     def refused as bool init false;
     try {
@@ -169,10 +169,10 @@ func readClock(dev as Device) {
         $refused = true;
     }
     if ($refused) {
-        $before = time.unixMillis(time.now());
+        $before = time.unixMilliseconds(time.now());
         $a = exchange($dev, $url, $action, $op, [], $dev.timeoutMs, true);
     }
-    def after as int init time.unixMillis(time.now());
+    def after as int init time.unixMilliseconds(time.now());
     def method as string init "";
     if ($a.digest) {
         $method = "digest";
@@ -198,7 +198,7 @@ func readClock(dev as Device) {
     }
     def t as time.Time init dateTimeOf(xml.get($sdt, "*:UTCDateTime"), $a);
     $c.utc = time.format($t, "%Y-%m-%dT%H:%M:%SZ");
-    def offset as int init time.unixMillis($t) - ($before + ($after - $before) // 2);
+    def offset as int init time.unixMilliseconds($t) - ($before + ($after - $before) // 2);
     return ClockRead{clock: $c, offsetMs: $offset, known: true, auth: $method};
 }
 

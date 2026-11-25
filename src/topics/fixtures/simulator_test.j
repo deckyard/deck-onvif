@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LGPL-3.0-only
 # SPDX-FileCopyrightText: Copyright (C) 2026 mplx <mplx@jennifer-lang.dev>
-# pragma-jennifer-version: >=0.27.0
+# pragma-jennifer-version: >=0.28.0
 
 # onvif - replies recorded from onvif_simple_server (roleoroleo, commit
 # 7a2e335c, GPL-3.0, run in a throwaway container) on 2026-11-14: SOAP 1.2,

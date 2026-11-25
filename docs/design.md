@@ -179,7 +179,7 @@ unicast Probes work).
 
 ## Dependencies on the interpreter
 
-- Floor `>=0.27.0`: the UTF-8 codecs of `encoding.encode` / `decode`,
+- Floor `>=0.28.0` (the calls 0.29.0 removes are replaced by their 0.28.0 forms): the UTF-8 codecs of `encoding.encode` / `decode`,
   `strings.replicate` and `testing.assertThrowsArgs` arrived in 0.27.0.
 - The bundled `soap` module and HTTP Digest in `http` (0.26.0).
 - The bundled modules passing `"limit"`, `"timeout"` and `"closed"` on.

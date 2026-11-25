@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LGPL-3.0-only
 # SPDX-FileCopyrightText: Copyright (C) 2026 mplx <mplx@jennifer-lang.dev>
-# pragma-jennifer-version: >=0.27.0
+# pragma-jennifer-version: >=0.28.0
 
 # onvif - Media and Media2: profiles, stream and snapshot URIs, snapshots.
 # Spliced into onvif.j via include.
@@ -342,14 +342,12 @@ func isImage(b as bytes) {
 func fetchBytes(dev as Device, url as string, headers as map of string to string) {
     def r as http.BytesResponse;
     try {
-        $r = http.requestWithBytes(
+        $r = http.sendBytes(
             "GET",
             $url,
             $headers,
-            "",
-            $dev.timeoutMs,
-            $dev.maxMediaBytes,
-            $dev.tls);
+            encoding.encode("utf-8", ""),
+            httpOptions($dev.timeoutMs, $dev.maxMediaBytes, $dev.tls));
     } catch (e) {
         if ($e.kind == "cancelled") {
             throw $e;
@@ -367,4 +365,21 @@ func fetchBytes(dev as Device, url as string, headers as map of string to string
         fail("snapshot: GET " + shownUrl($url) + ": " + $why);
     }
     return $r;
+}
+
+# httpOptions is the http.Options a positional timeout, body cap and TLS
+# setting stand for: a timeout of 0 means no idle timeout, as it did for the
+# positional calls.
+func httpOptions(timeoutMs as int, maxBytes as int, tls as http.TlsOptions) {
+    def o as http.Options;
+    $o.timeoutMs = $timeoutMs;
+    if ($timeoutMs == 0) {
+        $o.timeoutMs = math.MAX_INT;
+    }
+    $o.maxBytes = $maxBytes;
+    def t as net.TLSOptions;
+    $t.skipVerify = $tls.skipVerify;
+    $t.caCert = $tls.caCert;
+    $o.tlsOptions = $t;
+    return $o;
 }

@@ -1,6 +1,6 @@
 # SPDX-License-Identifier: LGPL-3.0-only
 # SPDX-FileCopyrightText: Copyright (C) 2026 mplx <mplx@jennifer-lang.dev>
-# pragma-jennifer-version: >=0.27.0
+# pragma-jennifer-version: >=0.28.0
 
 # onvif - core: the Device handle and its settings, URL policy, WS-Security,
 # the clock offset, the SOAP exchange, errors and `call`. Spliced into
@@ -722,8 +722,8 @@ export func passwordDigest(nonce as bytes, created as string, password as string
  * @return {string} `YYYY-MM-DDTHH:MM:SSZ`
  */
 func createdNow(dev as Device) {
-    def ms as int init time.unixMillis(time.now()) + $dev.offsetMs;
-    return time.format(time.fromUnixMillis($ms), "%Y-%m-%dT%H:%M:%SZ");
+    def ms as int init time.unixMilliseconds(time.now()) + $dev.offsetMs;
+    return time.format(time.fromUnixMilliseconds($ms), "%Y-%m-%dT%H:%M:%SZ");
 }
 
 /**

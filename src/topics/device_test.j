@@ -1,18 +1,18 @@
 # SPDX-License-Identifier: LGPL-3.0-only
 # SPDX-FileCopyrightText: Copyright (C) 2026 mplx <mplx@jennifer-lang.dev>
-# pragma-jennifer-version: >=0.27.0
+# pragma-jennifer-version: >=0.28.0
 
 # onvif - white-box tests for the device topic. Spliced into onvif_test.j via
 # include.
 
 func testConnectReadsTheClockAndServices() {
     def f as Fake init simFake({});
-    def before as int init time.unixMillis(time.now());
+    def before as int init time.unixMilliseconds(time.now());
     def d as Device init connect(fakeDevice($f));
-    def after as int init time.unixMillis(time.now());
+    def after as int init time.unixMilliseconds(time.now());
     stopFake($f);
     testing.assertTrue($d.clockSynced);
-    def camera as int init time.unixMillis(time.fromIso("2026-11-14T19:32:04Z"));
+    def camera as int init time.unixMilliseconds(time.fromIso("2026-11-14T19:32:04Z"));
     testing.assertTrue($d.offsetMs <= $camera - $before and $d.offsetMs >= $camera - $after);
     testing.assertEqual($d.media, "media2");
     testing.assertEqual($d.auth, "wsse");
